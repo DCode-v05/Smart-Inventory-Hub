@@ -1,0 +1,7 @@
+Django>=4.2
+djangorestframework
+joblib
+scikit-learn
+pandas
+numpy
+django-cors-headers

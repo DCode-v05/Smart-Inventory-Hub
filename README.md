@@ -36,13 +36,17 @@ npm install
 npm run dev
 ```
 
-Dashboard (also needs `pip install streamlit plotly`):
+Dashboard (also needs `pip install streamlit plotly`; see the known issue below):
 
 ```bash
 streamlit run streamlit_dashboard.py
 ```
 
 The dashboard looks for the pickle files in the current directory, but the repo keeps them in `backend/model/` and `feature_scaler.pkl` is not committed. Run the notebook to regenerate them, or copy them next to the script.
+
+## Known issue
+
+`streamlit_dashboard.py` does not currently parse. Several calls have a corrupted argument, for example `st.plotly_chart(fig, width=" stretch\)` on lines 180, 187, 213, 225, 233, 268, 350, 454 and 556, which should read `width="stretch"`. Fix those before running the dashboard. The API and front end are unaffected.
 
 ## Notes
 

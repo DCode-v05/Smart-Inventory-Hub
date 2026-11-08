@@ -17,3 +17,13 @@ dist/
 
 # macOS
 .DS_Store
+.env
+.ipynb_checkpoints/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.idea/
+Thumbs.db
+*.log
+*.tsbuildinfo
+backend/db.sqlite3

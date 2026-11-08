@@ -59,8 +59,7 @@ export default function Forecasting({navigateToPage}){
       }
       setResult(newResult)
       
-      // Add to prediction history
-      setPredictionHistory(prev => [...prev, newResult].slice(-10)) // Keep last 10 predictions
+      setPredictionHistory(prev => [...prev, newResult].slice(-10))
     }catch(e){
       setError(e?.response?.data?.error || e.message || 'Prediction failed')
     } finally {
@@ -78,7 +77,6 @@ export default function Forecasting({navigateToPage}){
     setError(null)
   }
 
-  // Generate sample demand trend data
   const generateDemandTrend = () => {
     const days = Array.from({length: 30}, (_, i) => i + 1)
     const baseDemand = features['Demand Forecast'] || 25
@@ -89,7 +87,6 @@ export default function Forecasting({navigateToPage}){
     }))
   }
 
-  // Generate seasonal pattern data
   const generateSeasonalData = () => {
     const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
     const seasonality = features['Seasonality_encoded'] || 1
@@ -202,14 +199,12 @@ export default function Forecasting({navigateToPage}){
                     <button 
                       className="button" 
                       onClick={() => {
-                        // Store prediction in localStorage for inventory planning
                         localStorage.setItem('predictedDemand', result.prediction.toString());
                         localStorage.setItem('predictionSource', JSON.stringify({
                           value: result.prediction,
                           timestamp: result.timestamp,
                           features: result.features
                         }));
-                        // Navigate to inventory planning page
                         if (navigateToPage) {
                           navigateToPage('inventory');
                         }

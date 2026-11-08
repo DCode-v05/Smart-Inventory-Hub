@@ -3,12 +3,10 @@ import Plot from 'react-plotly.js'
 import api from '../api'
 
 export default function Inventory(){
-  // Check for predicted demand from forecasting page
   const [hasPredictedDemand, setHasPredictedDemand] = useState(false)
   const [predictionSource, setPredictionSource] = useState(null)
   
   const [formData, setFormData] = useState(() => {
-    // Check localStorage for predicted demand
     const savedDemand = localStorage.getItem('predictedDemand')
     const savedSource = localStorage.getItem('predictionSource')
     
@@ -24,7 +22,7 @@ export default function Inventory(){
       unit_cost: 10.0,
       holding_cost_rate: 0.25,
       ordering_cost: 50,
-      demand_std_dev: savedDemand ? parseFloat(savedDemand) * 0.2 : 5.0  // 20% variability by default
+      demand_std_dev: savedDemand ? parseFloat(savedDemand) * 0.2 : 5.0
     }
   })
   
@@ -54,15 +52,12 @@ export default function Inventory(){
   }
 
   const resetForm = () => {
-    // Clear localStorage data
     localStorage.removeItem('predictedDemand')
     localStorage.removeItem('predictionSource')
     
-    // Reset prediction state
     setHasPredictedDemand(false)
     setPredictionSource(null)
     
-    // Reset form data
     setFormData({
       predicted_demand: 25,
       lead_time_days: 7,
@@ -76,7 +71,6 @@ export default function Inventory(){
     setError(null)
   }
 
-  // Generate ABC analysis data
   const generateABCData = () => {
     return [
       {category: 'A-Items', percentage: 20, value: 80, count: 150},
@@ -85,7 +79,6 @@ export default function Inventory(){
     ]
   }
 
-  // Generate stock simulation data
   const generateStockSimulation = () => {
     const days = Array.from({length: 30}, (_, i) => i + 1)
     const eoq = result?.eoq || 50
@@ -93,11 +86,9 @@ export default function Inventory(){
     let currentStock = 100
     
     return days.map(day => {
-      // Simulate daily demand with variability
       const dailyDemand = Math.max(0, formData.predicted_demand + (Math.random() - 0.5) * 10)
       currentStock -= dailyDemand
       
-      // Reorder when below reorder point
       if (currentStock <= reorderPoint && day % 7 === 0) {
         currentStock += eoq
       }
@@ -111,12 +102,11 @@ export default function Inventory(){
     })
   }
 
-  // Generate cost breakdown data
   const generateCostBreakdown = () => {
     const annualDemand = formData.predicted_demand * 365
     const holdingCost = (formData.unit_cost * formData.holding_cost_rate * (result?.eoq || 50)) / 2
     const orderingCost = (annualDemand / (result?.eoq || 50)) * formData.ordering_cost
-    const stockoutCost = formData.unit_cost * 0.1 * 5 // Estimated stockout cost
+    const stockoutCost = formData.unit_cost * 0.1 * 5
     
     return [
       {category: 'Holding Cost', amount: holdingCost, percentage: holdingCost / (holdingCost + orderingCost + stockoutCost) * 100},
